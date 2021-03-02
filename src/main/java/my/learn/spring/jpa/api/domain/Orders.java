@@ -1,5 +1,6 @@
 package my.learn.spring.jpa.api.domain;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -32,6 +33,7 @@ public class Orders {
   @JoinColumn(name = "member_id")
   private Member member; //주문 회원
 
+  @JsonIgnore
   @OneToMany(mappedBy = "orders", cascade = CascadeType.ALL)
   private List<OrderItem> orderItems = new ArrayList<>();
 
@@ -57,6 +59,20 @@ public class Orders {
   public void setDelivery(Delivery delivery) {
     this.delivery = delivery;
     delivery.setOrders(this);
+  }
+
+  public static Orders createOrder(Member member, Delivery delivery, OrderItem... orderItems) {
+    Orders orders = new Orders();
+    orders.setMember(member);
+    orders.setDelivery(delivery);
+    for (OrderItem orderItem : orderItems) {
+      orders.addOrderItem(orderItem);
+    }
+
+    orders.setStatus(OrderStatus.ORDER);
+    orders.setOrderDate(LocalDateTime.now());
+
+    return orders;
   }
 
 }

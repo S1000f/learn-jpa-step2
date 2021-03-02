@@ -1,5 +1,6 @@
 package my.learn.spring.jpa.api.domain;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import java.util.ArrayList;
 import java.util.List;
 import javax.persistence.Column;
@@ -27,6 +28,7 @@ public class Category {
 
   private String name;
 
+  @JsonIgnore
   @ManyToMany
   @JoinTable(name = "category_item",
       joinColumns = @JoinColumn(name = "category_id"),
@@ -37,6 +39,7 @@ public class Category {
   @JoinColumn(name = "parent_id")
   private Category parent;
 
+  @JsonIgnore
   @OneToMany(mappedBy = "parent")
   private List<Category> child = new ArrayList<>();
 

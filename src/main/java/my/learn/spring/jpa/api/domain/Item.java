@@ -1,5 +1,6 @@
 package my.learn.spring.jpa.api.domain;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import java.util.ArrayList;
 import java.util.List;
 import javax.persistence.Column;
@@ -31,6 +32,7 @@ public class Item {
 
   private int stockQuantity;
 
+  @JsonIgnore
   @ManyToMany(mappedBy = "items")
   private List<Category> categories = new ArrayList<>();
 

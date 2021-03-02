@@ -8,11 +8,17 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @Setter
 @Getter
+@Builder
+@AllArgsConstructor
+@NoArgsConstructor
 @Table(name = "order_item")
 @Entity
 public class OrderItem {
@@ -32,4 +38,12 @@ public class OrderItem {
 
   private int orderPrice;
   private int count;
+
+  public static OrderItem createOrderItem(Item item, int price, int count) {
+    return OrderItem.builder()
+        .item(item)
+        .orderPrice(price)
+        .count(count)
+        .build();
+  }
 }
