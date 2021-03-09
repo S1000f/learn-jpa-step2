@@ -1,6 +1,5 @@
 package my.learn.spring.jpa.api.domain;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -33,7 +32,6 @@ public class Orders {
   @JoinColumn(name = "member_id")
   private Member member; //주문 회원
 
-  @JsonIgnore
   @OneToMany(mappedBy = "orders", cascade = CascadeType.ALL)
   private List<OrderItem> orderItems = new ArrayList<>();
 

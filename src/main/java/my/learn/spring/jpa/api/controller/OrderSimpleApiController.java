@@ -51,12 +51,4 @@ public class OrderSimpleApiController {
     return ordersService.findOrderDto();
   }
 
-  @GetMapping("/api/v5/simple-orders")
-  public List<SimpleOrderDto> ordersV5() {
-    return ordersService.findAllFetched()
-        .stream()
-        .map(SimpleOrderDto::new)
-        .collect(Collectors.toList());
-  }
-
 }

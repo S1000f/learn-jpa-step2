@@ -3,6 +3,8 @@ package my.learn.spring.jpa.api.service;
 import static my.learn.spring.jpa.api.domain.QDelivery.delivery;
 import static my.learn.spring.jpa.api.domain.QMember.member;
 import static my.learn.spring.jpa.api.domain.QOrders.orders;
+import static my.learn.spring.jpa.api.domain.QOrderItem.orderItem;
+import static my.learn.spring.jpa.api.domain.QItem.item;
 
 import com.querydsl.jpa.impl.JPAQuery;
 import java.util.List;
@@ -51,13 +53,27 @@ public class OrdersService {
   }
 
   @Transactional(readOnly = true)
-  public List<Orders> findAllFetched() {
+  public List<Orders> findAllWithOrderItem() {
     JPAQuery<Orders> query = new JPAQuery<>(em);
 
     return query.from(orders)
         .join(orders.member, member).fetchJoin()
         .join(orders.delivery, delivery).fetchJoin()
+        .join(orders.orderItems, orderItem).fetchJoin()
+        .join(orderItem.item, item).fetchJoin()
+        .distinct()
         .fetch();
+  }
+
+  @Transactional(readOnly = true)
+  public List<Orders> findAllWithOrderItem2() {
+    // JPQL 의 distinct 는 데이터베이스의 distinct 추가와 함께 row 가 같은 root 엔티티를 가지고있으면 중복을 제거해준다
+    return em.createQuery("select distinct o from Orders o"
+        + " join fetch o.member m"
+        + " join fetch o.delivery d"
+        + " join fetch o.orderItems oi"
+        + " join fetch oi.item i", Orders.class)
+        .getResultList();
   }
 
 }

@@ -1,5 +1,6 @@
 package my.learn.spring.jpa.api.domain;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -32,6 +33,7 @@ public class OrderItem {
   @JoinColumn(name = "item_id")
   private Item item;
 
+  @JsonIgnore
   @ManyToOne(fetch = FetchType.LAZY)
   @JoinColumn(name = "orders_id")
   private Orders orders;
