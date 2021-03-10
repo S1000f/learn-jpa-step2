@@ -76,4 +76,14 @@ public class OrdersService {
         .getResultList();
   }
 
+  @Transactional(readOnly = true)
+  public List<Orders> findAllPageable(int offset, int limit) {
+    return em.createQuery("select o from Orders o"
+        + " join fetch o.member m"
+        + " join fetch o.delivery d", Orders.class)
+        .setFirstResult(offset)
+        .setMaxResults(limit)
+        .getResultList();
+  }
+
 }
