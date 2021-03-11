@@ -10,6 +10,9 @@ import my.learn.spring.jpa.api.domain.OrderItem;
 import my.learn.spring.jpa.api.domain.OrderStatus;
 import my.learn.spring.jpa.api.domain.Orders;
 import my.learn.spring.jpa.api.domain.commons.Address;
+import my.learn.spring.jpa.api.dto.OrderFlatDto;
+import my.learn.spring.jpa.api.dto.OrderQueryDto;
+import my.learn.spring.jpa.api.repository.OrderQueryRepository;
 import my.learn.spring.jpa.api.service.OrdersService;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -21,6 +24,7 @@ import org.springframework.web.bind.annotation.RestController;
 public class OrderApiController {
 
   private final OrdersService ordersService;
+  private final OrderQueryRepository orderQueryRepository;
 
   // bad
   @GetMapping("/api/v1/orders")
@@ -63,6 +67,26 @@ public class OrderApiController {
     return findOrders.stream()
         .map(OrdersDto::new)
         .collect(Collectors.toList());
+  }
+
+  // bad
+  // 프로젝션 객체를 생성하는 과정에서 n+1 문제 발생
+  @GetMapping("/api/v4/orders")
+  public List<OrderQueryDto> ordersV4() {
+    return orderQueryRepository.findOrderProjecting();
+  }
+
+  // good
+  // in 조건을 사용하여 n+1 문제 해소
+  // 하지만 페이징이 불가능
+  @GetMapping("/api/v5/orders")
+  public List<OrderQueryDto> ordersV5() {
+    return orderQueryRepository.findOrderProjectingV2();
+  }
+
+  @GetMapping("/api/v6/orders")
+  public List<OrderFlatDto> ordersV6() {
+    return orderQueryRepository.findAllByDtoFlat();
   }
 
   @Getter
